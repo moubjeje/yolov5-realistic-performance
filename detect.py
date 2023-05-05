@@ -27,13 +27,18 @@ Usage - formats:
                                  yolov5s_edgetpu.tflite     # TensorFlow Edge TPU
                                  yolov5s_paddle_model       # PaddlePaddle
 """
+import psutil
+import time
+process = psutil.Process()
+cpu_percent = process.cpu_percent()
+cpu_count = psutil.cpu_count()
+start = time.time_ns()
 
 import argparse
 import os
 import platform
 import sys
 from pathlib import Path
-
 import torch
 
 FILE = Path(__file__).resolve()
@@ -259,3 +264,12 @@ def main(opt):
 if __name__ == '__main__':
     opt = parse_opt()
     main(opt)
+    stop = time.time_ns()
+    cpu_percent = process.cpu_percent()
+    cpu_count = psutil.cpu_count()
+    print(f'process physical memory (byte): {process.memory_info().rss}')
+    print(f'process virtual memory (byte): {process.memory_info().vms}')
+    print(f'process memory percentage: {process.memory_percent()}')
+    print(f'process CPU percentage/count: {cpu_percent}/{cpu_count} = {cpu_percent/cpu_count}')
+    print(f'process elapsed time (ns): {stop-start}')
+    
